@@ -1,14 +1,12 @@
 import React from "react";
-import ReactDOM from "react-dom";
+import { createRoot } from "react-dom/client";
 import { BrowserRouter } from "react-router-dom";
 import AuthProvider from "./contexts/AuthProvider";
 import ThemeProvider from "./contexts/ThemeProvider";
 import App from "./App";
 
-// const root = createRoot(document.getElementById("root"));
-// root.render(<App />);
-
-ReactDOM.render(
+const root = createRoot(document.getElementById("root"));
+root.render(
   <React.StrictMode>
     <BrowserRouter>
       <AuthProvider>
@@ -17,6 +15,5 @@ ReactDOM.render(
         </ThemeProvider>
       </AuthProvider>
     </BrowserRouter>
-  </React.StrictMode>,
-  document.getElementById("root")
+  </React.StrictMode>
 );

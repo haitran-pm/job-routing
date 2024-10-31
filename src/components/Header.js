@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect } from "react";
+import React, { useContext } from "react";
 import { styled, alpha } from "@mui/material/styles";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
@@ -13,11 +13,8 @@ import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import Container from "@mui/material/Container";
 import IconButton from "@mui/material/IconButton";
 import MoreIcon from "@mui/icons-material/MoreVert";
-import LightModeIcon from "@mui/icons-material/LightMode";
-import DarkModeIcon from "@mui/icons-material/DarkMode";
-import ToggleButton from "@mui/material/ToggleButton";
-import LoginModal from "./LoginModal";
-import AuthProvider from "../contexts/AuthProvider";
+import AuthContext from "../contexts/AuthContext";
+import { useNavigate } from "react-router-dom";
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -62,19 +59,10 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 }));
 
 export function Header() {
-  const Auth = AuthProvider();
-  const { username, password, isLoading, error, isLoggedIn, isModalShowed } =
-    Auth.state;
-  // const onSubmit = async (e) => {
-  //   e.preventDefault();
-  //   dispatch({ type: "login" });
-  //   try {
-  //     await login({ username, password });
-  //     dispatch({ type: "success" });
-  //   } catch (error) {
-  //     dispatch({ type: "error" });
-  //   }
-  // };
+  const auth = useContext(AuthContext);
+  const { username, isLoggedIn } = auth.state;
+  const dispatch = auth.dispatch;
+  const navigate = useNavigate();
 
   return (
     <Box sx={{ flexGrow: 1 }}>
@@ -105,7 +93,7 @@ export function Header() {
                     startIcon={<LoginIcon />}
                     color="inherit"
                     disableRipple
-                    // onClick={() => dispatch({ type: "open" })}
+                    onClick={() => navigate("/login")}
                     sx={{
                       ml: "auto",
                       textTransform: "none",
@@ -139,30 +127,12 @@ export function Header() {
                       fontWeight: 400,
                       display: { xs: "none", sm: "none", md: "inline-flex" },
                     }}
-                    // onClick={() => dispatch({ type: "logout" })}
+                    onClick={() => dispatch({ type: "logout" })}
                   >
                     Sign out
                   </Button>
                 </>
               )}
-
-              {/* <ToggleButton
-                value="check"
-                size="small"
-                selected={!darkMode}
-                onChange={() => setDarkMode((prevMode) => !prevMode)}
-                sx={{
-                  border: "none",
-                  ml: 1,
-                  display: { xs: "none", sm: "none", md: "inline-flex" },
-                }}
-              >
-                {darkMode ? (
-                  <LightModeIcon />
-                ) : (
-                  <DarkModeIcon sx={{ color: "white", background: "none" }} />
-                )}
-              </ToggleButton> */}
               <IconButton
                 size="medium"
                 edge="end"
@@ -173,7 +143,6 @@ export function Header() {
                 <MoreIcon />
               </IconButton>
             </Box>
-            {/* <LoginModal state={state} dispatch={dispatch} onSubmit={onSubmit} /> */}
           </Toolbar>
         </Container>
       </AppBar>

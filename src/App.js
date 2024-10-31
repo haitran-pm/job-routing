@@ -1,26 +1,26 @@
-import React, { useState, createContext } from "react";
-import { BrowserRouter } from "react-router-dom";
+import React, { useContext } from "react";
 import { Routes, Route } from "react-router-dom";
-import Router from "./routes";
 import "@fontsource/roboto/300.css";
 import "@fontsource/roboto/400.css";
 import "@fontsource/roboto/500.css";
 import "@fontsource/roboto/700.css";
-import ThemeProvider from "./contexts/ThemeProvider";
-import AuthProvider from "./contexts/AuthProvider";
 import DetailPage from "./pages/DetailPage";
 import LoginPage from "./pages/LoginPage";
 import MainLayout from "./layouts/MainLayout";
+import AuthContext from "./contexts/AuthContext";
 
 function App() {
+  const auth = useContext(AuthContext);
   return (
     <Routes>
       <Route path="/" element={<MainLayout />}>
-        <Route path="/job/:id" element={<DetailPage />} />
+        {auth.state.isLoggedIn ? (
+          <Route path="/job/:id" element={<DetailPage />} />
+        ) : (
+          <Route path="/job/:id" element={<LoginPage />} />
+        )}
         <Route path="login" element={<LoginPage />} />
-        <Route index element={<LoginPage />} />
       </Route>
-      {/* <Route path="*" element={<NotFoundPage />} /> */}
     </Routes>
   );
 }

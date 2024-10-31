@@ -8,7 +8,6 @@ import { PageContext } from "../layouts/MainLayout";
 import { apiService } from "../app/apiServices";
 import LoadingScreen from "../components/LoadingScreen";
 import { JobPagination } from "./JobPagination";
-import { JobDetailModal } from "./JobDetailModal";
 
 export function JobList() {
   const { page } = useContext(PageContext);
@@ -61,7 +60,6 @@ export function JobList() {
         </Container>
       </Box>
       <JobPagination />
-      <JobDetailModal />
     </>
   );
 }

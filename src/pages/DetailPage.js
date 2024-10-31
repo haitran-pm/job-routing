@@ -1,7 +1,8 @@
 import React from "react";
+import { JobDetailModal } from "../components/JobDetailModal";
 
 function DetailPage() {
-  return <div>DetailPage</div>;
+  return <JobDetailModal />;
 }
 
 export default DetailPage;

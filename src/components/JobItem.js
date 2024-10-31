@@ -9,12 +9,12 @@ import Button from "@mui/material/Button";
 import Divider from "@mui/material/Divider";
 import Chip from "@mui/material/Chip";
 import Stack from "@mui/material/Stack";
-import AuthProvider from "../contexts/AuthProvider";
+import AuthContext from "../contexts/AuthContext";
 
 export function JobItem({ job: { id, title, skills, description } }) {
   const {
     state: { isLoggedIn },
-  } = AuthProvider();
+  } = useContext(AuthContext);
 
   return (
     <Grid size={{ lg: 4, md: 6, xs: 12 }} sx={{ display: "grid" }}>

@@ -17,7 +17,8 @@ import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import Button from "@mui/material/Button";
 import Stack from "@mui/material/Stack";
 import { useNavigate, Link } from "react-router-dom";
-import AuthProvider from "../contexts/AuthProvider";
+import AuthContext from "../contexts/AuthContext";
+import loginService from "../app/loginService";
 
 const style = {
   position: "absolute",
@@ -31,21 +32,23 @@ const style = {
 };
 
 function LoginModal() {
-  const auth = useContext(AuthProvider);
-  console.log(auth);
-  // const { username, password, isAuthenticated } = Auth.state;
-  // console.log(Auth);
-  // const onSubmit = async (e) => {
-  //   e.preventDefault();
-  //   // dispatch({ type: "login" });
-  //   try {
-  //     // await login({ username, password });
-  //     // dispatch({ type: "success" });
-  //   } catch (error) {
-  //     // dispatch({ type: "error" });
-  //   }
-  // };
-  const onSubmit = () => {};
+  const auth = useContext(AuthContext);
+  const { username, password, isLoading, error } = auth.state;
+  const dispatch = auth.dispatch;
+
+  const navigate = useNavigate();
+
+  const onSubmit = async (e) => {
+    e.preventDefault();
+    dispatch({ type: "login" });
+    try {
+      await loginService({ username, password });
+      dispatch({ type: "success" });
+      navigate(-1);
+    } catch (error) {
+      dispatch({ type: "error" });
+    }
+  };
 
   const [showPassword, setShowPassword] = React.useState(false);
   const handleClickShowPassword = () => setShowPassword((show) => !show);
@@ -59,6 +62,9 @@ function LoginModal() {
   return (
     <Modal
       open={true}
+      onClose={() => {
+        navigate(-1);
+      }}
       aria-labelledby="modal-modal-title"
       aria-describedby="modal-modal-description"
     >
@@ -70,24 +76,24 @@ function LoginModal() {
           Login
         </Typography>
         <form className="form" onSubmit={onSubmit}>
-          {/* {error && (
+          {error && (
             <Alert severity="error" sx={{ mb: "16px" }}>
               {error}
             </Alert>
-          )} */}
+          )}
 
           <TextField
             fullWidth
             id="outlined-password-input"
             label="Username"
             type="text"
-            // value={username}
-            // onChange={(e) =>
-            //   dispatch({
-            //     type: "field",
-            //     payload: { name: "username", value: e.currentTarget.value },
-            //   })
-            // }
+            value={username}
+            onChange={(e) =>
+              dispatch({
+                type: "field",
+                payload: { name: "username", value: e.currentTarget.value },
+              })
+            }
             sx={{ mb: "12px" }}
           />
           <FormControl fullWidth variant="outlined" sx={{ mb: "12px" }}>
@@ -96,13 +102,13 @@ function LoginModal() {
             </InputLabel>
             <OutlinedInput
               id="outlined-adornment-password"
-              // value={password}
-              // onChange={(e) =>
-              //   dispatch({
-              //     type: "field",
-              //     payload: { name: "password", value: e.currentTarget.value },
-              //   })
-              // }
+              value={password}
+              onChange={(e) =>
+                dispatch({
+                  type: "field",
+                  payload: { name: "password", value: e.currentTarget.value },
+                })
+              }
               type={showPassword ? "text" : "password"}
               endAdornment={
                 <InputAdornment position="end">
@@ -129,10 +135,9 @@ function LoginModal() {
             fullWidth
             color="error"
             variant="contained"
-            // disabled={isLoading}
+            disabled={isLoading}
           >
-            {/* {isLoading ? "LOGGING IN..." : "SIGN IN"} */}
-            SIGN IN
+            {isLoading ? "LOGGING IN..." : "SIGN IN"}
           </Button>
           <Stack
             direction="row"
