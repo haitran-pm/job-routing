@@ -1,34 +1,27 @@
 import React, { useState, createContext } from "react";
+import { BrowserRouter } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
+import Router from "./routes";
 import "@fontsource/roboto/300.css";
 import "@fontsource/roboto/400.css";
 import "@fontsource/roboto/500.css";
 import "@fontsource/roboto/700.css";
-import { ThemeProvider, createTheme } from "@mui/material/styles";
-import CssBaseline from "@mui/material/CssBaseline";
-import { Header } from "./components/Header";
-import { JobList } from "./components/JobList";
-import { JobPagination } from "./components/JobPagination";
-
-export const PageContext = createContext();
+import ThemeProvider from "./contexts/ThemeProvider";
+import AuthProvider from "./contexts/AuthProvider";
+import DetailPage from "./pages/DetailPage";
+import LoginPage from "./pages/LoginPage";
+import MainLayout from "./layouts/MainLayout";
 
 function App() {
-  const [page, setPage] = useState(1);
-  const [darkMode, setDarkMode] = useState(true);
-  const theme = createTheme({
-    palette: {
-      mode: darkMode ? "dark" : "light",
-    },
-  });
-
   return (
-    <ThemeProvider theme={theme}>
-      <PageContext.Provider value={{ page, setPage }}>
-        <CssBaseline />
-        <Header darkMode={darkMode} setDarkMode={setDarkMode} />
-        <JobList />
-        <JobPagination />
-      </PageContext.Provider>
-    </ThemeProvider>
+    <Routes>
+      <Route path="/" element={<MainLayout />}>
+        <Route path="/job/:id" element={<DetailPage />} />
+        <Route path="login" element={<LoginPage />} />
+        <Route index element={<LoginPage />} />
+      </Route>
+      {/* <Route path="*" element={<NotFoundPage />} /> */}
+    </Routes>
   );
 }
 

@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useContext } from "react";
+import { Link } from "react-router-dom";
 import Grid from "@mui/material/Grid2";
 import Card from "@mui/material/Card";
 import CardActions from "@mui/material/CardActions";
@@ -8,8 +9,13 @@ import Button from "@mui/material/Button";
 import Divider from "@mui/material/Divider";
 import Chip from "@mui/material/Chip";
 import Stack from "@mui/material/Stack";
+import AuthProvider from "../contexts/AuthProvider";
 
-export function JobItem({ job: { title, skills, description } }) {
+export function JobItem({ job: { id, title, skills, description } }) {
+  const {
+    state: { isLoggedIn },
+  } = AuthProvider();
+
   return (
     <Grid size={{ lg: 4, md: 6, xs: 12 }} sx={{ display: "grid" }}>
       <Card
@@ -49,6 +55,8 @@ export function JobItem({ job: { title, skills, description } }) {
         <CardActions>
           <Button
             variant="contained"
+            component={Link}
+            to={isLoggedIn ? `/job/${id}` : `/login`}
             size="xs"
             color="warning"
             sx={{ margin: "auto", height: "24px" }}
